@@ -3,7 +3,7 @@ import ExpenseItem from '../components/ExpenseItem';
 import ExpenseAdd from '../components/ExpenseAdd';
 import ExpenseSorter from '../components/ExpenseSorter';
 import type { Expense } from '../types/Expense';
-const host = import.meta.env.VITE_API_URL || 'http://unknown-api-url.com';
+
 
 
 export default function Home() {
@@ -12,7 +12,7 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-
+    const host = import.meta.env.VITE_API_URL || 'http://unknown-api-url.com';
   const sendApiRequestandHandleError = async (method: string = 'GET', path: string, body?: any) => {
     try {
       const response = await fetch(`${host}/api/${path}`, {
