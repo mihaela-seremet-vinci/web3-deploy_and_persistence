@@ -8,7 +8,10 @@ export default function ExpenseItem({ expense }: ExpenseItemProps) {
   return (
     <div>
       <div>
-        <strong>Date:</strong> {expense.date}
+        <strong>Date:</strong>{' '}
+        {typeof expense.date === 'string'
+          ? expense.date
+          : new Date(expense.date).toLocaleDateString()}
       </div>
       <div>
         <strong>Description:</strong> {expense.description}

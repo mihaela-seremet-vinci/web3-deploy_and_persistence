@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import ExpenseItem from '../components/ExpenseItem';
 import ExpenseAdd from '../components/ExpenseAdd';
 import ExpenseSorter from '../components/ExpenseSorter';
-import type { Expense } from '../types/Expense';
+import type { Expense, ExpenseInput } from '../types/Expense';
 
 
 
@@ -47,12 +47,19 @@ export default function Home() {
     fetchExpenses();
   }, []);
 
-  const handleAddExpense = async (newExpense: Expense) => {
-    const newExpensesOptimistic = [newExpense, ...expenses]; // Optimistically update the state, whatever the sort method, add on top
-    setExpenses(newExpensesOptimistic);
-    const addedExpense = await sendApiRequestandHandleError('POST', 'expenses', newExpense);
-    const newExpensesActual = [addedExpense, ...expenses]; // Now that we have the actual added expense with id from backend, let's use it instead of the optimistically added one
-    setExpenses(newExpensesActual);
+  const handleAddExpense = async (newExpense: ExpenseInput): Promise<void> => {
+    try {
+      const response = await fetch('http://localhost:3000/expenses', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newExpense),
+      });
+      
+      const addedExpense: Expense = await response.json();
+      setExpenses([...expenses, addedExpense]);
+    } catch (error) {
+      console.error('Error adding expense:', error);
+    }
   };
 
   const handleResetData = async () => {
